@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     'Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont',
     'Virginia','Washington','West Virginia','Wisconsin','Wyoming']
 
+  let breweries = []
+
   states.forEach((element) => {
     const newState = document.createElement('option');
     newState.textContent = element;
@@ -25,8 +27,27 @@ document.addEventListener('DOMContentLoaded', () => {
   function getBreweries(city, state) {
     fetch(`https://api.openbrewerydb.org/breweries?by_city=${city}&by_state=${state}&per_page=20&page=1`)
       .then((res) => res.json())
-      .then((data) => console.log(data));
+      .then((data) => breweryListMaker(data));
+  }
+
+  class brewery{
+    constructor(name, latitude, longitude){
+      this.name = name
+      this.latitude = latitude,
+      this.longitude = longitude
+    }
+  }
+
+  function createBrews(place) {
+    breweries.push(new brewery(place.name, place.latitude, place.longitude))
+    console.log(breweries)
   }
 
 
-});
+  function breweryListMaker(breweries) {
+    breweries.forEach((element) => {
+      createBrews(element)
+  })
+}
+
+})
