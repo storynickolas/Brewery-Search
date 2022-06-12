@@ -14,6 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('states').append(newState);
   });
 
-  
+  document.getElementById('search').addEventListener('click', (e) => {
+    e.preventDefault();
+    let city = document.getElementById('city').value.split(' ');
+    city = city.join('_');
+    let state = document.getElementById('states').value
+    console.log(city, state);
+  });
 
 });
