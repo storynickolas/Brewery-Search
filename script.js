@@ -19,7 +19,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let city = document.getElementById('city').value.split(' ');
     city = city.join('_');
     let state = document.getElementById('states').value
-    console.log(city, state);
+    getBreweries(city, state)
   });
+
+  function getBreweries(city, state) {
+    fetch(`https://api.openbrewerydb.org/breweries?by_city=${city}&by_state=${state}&per_page=20&page=1`)
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+  }
+
 
 });
