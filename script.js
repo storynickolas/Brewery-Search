@@ -15,16 +15,23 @@ document.addEventListener('DOMContentLoaded', () => {
   let page
   let city
   let state
-  let count
 
+  //Establish map at geographic center of US
+  let map = L.map('map').setView([39.8283, -98.5795], 4);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
+
+  //Add list of states to selection
   states.forEach((element) => {
     const newState = document.createElement('option');
     newState.textContent = element;
     document.getElementById('states').append(newState);
   });
 
+  //Search for breweries by city + state
   document.getElementById('search').addEventListener('click', (e) => {
-    count = 1;
     page=1
     e.preventDefault();
     document.getElementById('breweries-list').innerHTML = '';
@@ -35,12 +42,14 @@ document.addEventListener('DOMContentLoaded', () => {
     getBreweries(city, state, page)
   });
 
+  //Retrieve breweries from search
   function getBreweries(city, state, page) {
     fetch(`https://api.openbrewerydb.org/breweries?by_city=${city}&by_state=${state}&per_page=20&page=${page}`)
       .then((res) => res.json())
       .then((data) => breweryListMaker(data))
   }
 
+  //Fill breweries array from API data
   class brewery{
     constructor(name, latitude, longitude, street, zip, url, phone){
       this.name = name
@@ -65,12 +74,18 @@ document.addEventListener('DOMContentLoaded', () => {
         place.phone
       ))
   }
+
+  //Click on brewery name for additional info
   function moreInfo(info) {
     document.getElementById(`m${info}`).style.display='block'
   }
 
-
+  //populate brewery list or show error message
   function breweryListMaker(breweries) {
+    let count = 1;
+    let lat = []
+    let long = []
+    let geojsonFeature = []
     breweries[0] == undefined ? document.getElementById('error').style.display='block' : document.getElementById('error').style.display='none'
     page < 1 ? document.getElementById('next').style.display='none' : document.getElementById('next').style.display='block'
     page < 2 ? document.getElementById('previous').style.display='none' : document.getElementById('previous').style.display='block'
@@ -89,7 +104,17 @@ document.addEventListener('DOMContentLoaded', () => {
           <a href=${website}>${website} </a>
         </div>
       `
-      // newBrew.setAttribute('class', 'currentList');
+      if (typeof element.longitude === 'string') {
+        lat.push(element.latitude)
+        long.push(element.longitude)
+        geojsonFeature.push({
+          "type": "Feature",
+          "geometry": {
+              "type": "Point",
+              "coordinates": [element.longitude, element.latitude]
+          }
+        })
+      }
       newBrew.setAttribute('id', count)
       document.getElementById('breweries-list').append(newBrew);
       document.getElementById(`m${count}`).style.display='none'
@@ -97,12 +122,28 @@ document.addEventListener('DOMContentLoaded', () => {
       createBrews(element)
       count++
     })
+    if(breweries[0] !== undefined) {
+      updateMap(long, lat, geojsonFeature)
+    }
   }
 
+  //Move map to new location based on first brewery with coordinates
+  function updateMap(lat, long, geojsonFeature) {
+    map.off()
+    map.remove()
+    map = L.map('map').setView([long[0], lat[0]], 10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+  }).addTo(map);
+    geojsonFeature.forEach(element => {
+      L.geoJSON(element).addTo(map)
+    })
+  }
+
+  //Add functionality to next/previous buttons if results have more than 20 breweries
   document.getElementById('next').addEventListener('click', () => next())
   document.getElementById('previous').addEventListener('click', () => previous())
-
-
 
   function next() {
     page++
