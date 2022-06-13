@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('next').style.display='none' 
+  document.getElementById('previous').style.display='none' 
 
   const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado',
     'Connecticut','Delaware','District of Columbia','Florida','Georgia','Hawaii','Idaho',
@@ -64,25 +65,34 @@ document.addEventListener('DOMContentLoaded', () => {
         place.phone
       ))
   }
-
   function moreInfo(info) {
-    console.log(breweries[info])
-    const more = document.createElement('a');
-    more.textContent = ` - ${breweries[info].name}`
-    more.setAttribute('href', breweries[info].url)
-    document.getElementById(info).append(more);
+    document.getElementById(`m${info}`).style.display='block'
   }
 
 
   function breweryListMaker(breweries) {
     breweries[0] == undefined ? document.getElementById('error').style.display='block' : document.getElementById('error').style.display='none'
-    breweries.length < 20 ? document.getElementById('next').style.display='none' : document.getElementById('next').style.display='block'
+    page < 1 ? document.getElementById('next').style.display='none' : document.getElementById('next').style.display='block'
+    page < 2 ? document.getElementById('previous').style.display='none' : document.getElementById('previous').style.display='block'
     breweries.forEach((element) => {
-      const newBrew = document.createElement('li');
-      newBrew.setAttribute('class', 'currentList');
+      const newBrew = document.createElement('li')
+      let address, website, phone
+      element.street === null ? address = '' : address = `${element.street}, ${element.city}`
+      element.website_url === null ? website = '' : website = `${element.website_url}`
+      element.phone === null ? phone = '' : phone = `${element.phone}`
+      newBrew.innerHTML = `
+        <p id=${count}>${element.name}</P>
+        <div class='breweries' id=m${count}>
+          <h3>${element.name}</h3>
+          <h4>${address}</h4>
+          <h4>${phone}</h4>
+          <a href=${website}>${website} </a>
+        </div>
+      `
+      // newBrew.setAttribute('class', 'currentList');
       newBrew.setAttribute('id', count)
-      newBrew.textContent = element.name;
       document.getElementById('breweries-list').append(newBrew);
+      document.getElementById(`m${count}`).style.display='none'
       newBrew.addEventListener('click', (e) => moreInfo(e.target.id))
       createBrews(element)
       count++
@@ -90,11 +100,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   document.getElementById('next').addEventListener('click', () => next())
+  document.getElementById('previous').addEventListener('click', () => previous())
 
 
 
   function next() {
     page++
+    document.getElementById('breweries-list').innerHTML=''
+    getBreweries(city, state, page)
+  }
+
+  function previous() {
+    page--
+    document.getElementById('breweries-list').innerHTML=''
     getBreweries(city, state, page)
   }
 })

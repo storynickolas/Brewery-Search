@@ -7,5 +7,11 @@ body {
 }
 
 #next {
+  float:left;
+  display: block
+}
+
+#previous {
+  float:left;
   display: block
 }
