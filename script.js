@@ -11,9 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
     'Virginia','Washington','West Virginia','Wisconsin','Wyoming']
 
   let breweries = []
-  let page = 1
+  let page
   let city
   let state
+  let count
 
   states.forEach((element) => {
     const newState = document.createElement('option');
@@ -22,6 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('search').addEventListener('click', (e) => {
+    count = 1;
+    page=1
     e.preventDefault();
     document.getElementById('breweries-list').innerHTML = '';
     breweries = []
@@ -38,15 +41,36 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   class brewery{
-    constructor(name, latitude, longitude){
+    constructor(name, latitude, longitude, street, zip, url, phone){
       this.name = name
       this.latitude = latitude,
-      this.longitude = longitude
+      this.longitude = longitude,
+      this.street = street,
+      this.zip = zip,
+      this.url = url,
+      this.phone = phone
     }
   }
 
   function createBrews(place) {
-    breweries.push(new brewery(place.name, place.latitude, place.longitude))
+    breweries.push(
+      new brewery(
+        place.name, 
+        place.latitude, 
+        place.longitude,
+        place.street,
+        place.postal_code,
+        place.website_url,
+        place.phone
+      ))
+  }
+
+  function moreInfo(info) {
+    console.log(breweries[info])
+    const more = document.createElement('a');
+    more.textContent = ` - ${breweries[info].name}`
+    more.setAttribute('href', breweries[info].url)
+    document.getElementById(info).append(more);
   }
 
 
@@ -56,14 +80,18 @@ document.addEventListener('DOMContentLoaded', () => {
     breweries.forEach((element) => {
       const newBrew = document.createElement('li');
       newBrew.setAttribute('class', 'currentList');
+      newBrew.setAttribute('id', count)
       newBrew.textContent = element.name;
-      newBrew.addEventListener('click', () => console.log(element.name));
       document.getElementById('breweries-list').append(newBrew);
+      newBrew.addEventListener('click', (e) => moreInfo(e.target.id))
       createBrews(element)
+      count++
     })
   }
 
   document.getElementById('next').addEventListener('click', () => next())
+
+
 
   function next() {
     page++
