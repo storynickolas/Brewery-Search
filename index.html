@@ -6,11 +6,19 @@
 </head>
 <body>
   <h1>Brewery Finder</h1>
+  
   <form >
     <input id='city' type="text" autocomplete="off">
     <select id="states"></select>
     <button id="search">Search</button>
   </form>
+  <div id="error">
+    <p>Sorry there do not appear to be any matches</p>
+    <ul>
+      <li>Double check spelling</li>
+      <li>Try removing any special characters/numbers</li>
+    </ul>
+  </div>
   <ul id="breweries-list">
   </ul>
   <script src="script.js"></script>

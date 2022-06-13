@@ -1,3 +1,7 @@
 body {
   background: RGB(146, 168, 209)
 }
+
+#error {
+  display: none
+}

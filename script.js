@@ -18,16 +18,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('search').addEventListener('click', (e) => {
     e.preventDefault();
+    document.getElementById('breweries-list').innerHTML = '';
+    breweries = []
     let city = document.getElementById('city').value.split(' ');
     city = city.join('_');
     let state = document.getElementById('states').value
     getBreweries(city, state)
+
   });
 
   function getBreweries(city, state) {
     fetch(`https://api.openbrewerydb.org/breweries?by_city=${city}&by_state=${state}&per_page=20&page=1`)
       .then((res) => res.json())
-      .then((data) => breweryListMaker(data));
+      .then((data) => breweryListMaker(data))
   }
 
   class brewery{
@@ -40,11 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function createBrews(place) {
     breweries.push(new brewery(place.name, place.latitude, place.longitude))
-    console.log(breweries)
   }
 
 
   function breweryListMaker(breweries) {
+    breweries[0] == undefined ? document.getElementById('error').style.display='block' : document.getElementById('error').style.display='none'
+    // document.getElementById('error').style.display='block' : document.getElementById('error').style.display='none'
     breweries.forEach((element) => {
       const newBrew = document.createElement('li');
       newBrew.setAttribute('class', 'currentList');
