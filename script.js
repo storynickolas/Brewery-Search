@@ -85,16 +85,16 @@ document.addEventListener('DOMContentLoaded', () => {
     let count = 1;
     let lat = []
     let long = []
-    let geojsonFeature = []
+    let geo = []
     breweries[0] == undefined ? document.getElementById('error').style.display='block' : document.getElementById('error').style.display='none'
-    page < 1 ? document.getElementById('next').style.display='none' : document.getElementById('next').style.display='block'
+    page < 1 || breweries.length !== 20 ? document.getElementById('next').style.display='none' : document.getElementById('next').style.display='block'
     page < 2 ? document.getElementById('previous').style.display='none' : document.getElementById('previous').style.display='block'
     breweries.forEach((element) => {
       const newBrew = document.createElement('li')
       let address, website, phone
       element.street === null ? address = '' : address = `${element.street}, ${element.city}`
       element.website_url === null ? website = '' : website = `${element.website_url}`
-      element.phone === null ? phone = '' : phone = `${element.phone}`
+      element.phone === null ? phone = '' : phone = `(${element.phone.slice(0,3)})-${element.phone.slice(3,6)}-${element.phone.slice(6,10)}`
       newBrew.innerHTML = `
         <p id=${count}>${element.name}</P>
         <div class='breweries' id=m${count}>
@@ -107,12 +107,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (typeof element.longitude === 'string') {
         lat.push(element.latitude)
         long.push(element.longitude)
-        geojsonFeature.push({
-          "type": "Feature",
-          "geometry": {
-              "type": "Point",
-              "coordinates": [element.longitude, element.latitude]
-          }
+        geo.push({
+          name: element.name, 
+          latitude: element.latitude, 
+          longitude: element.longitude
         })
       }
       newBrew.setAttribute('id', count)
@@ -122,22 +120,23 @@ document.addEventListener('DOMContentLoaded', () => {
       createBrews(element)
       count++
     })
-    if(breweries[0] !== undefined) {
-      updateMap(long, lat, geojsonFeature)
+    console.log(breweries)
+    if(breweries[0].longitude !== null) {
+      updateMap(long, lat, geo)
     }
   }
 
   //Move map to new location based on first brewery with coordinates
-  function updateMap(lat, long, geojsonFeature) {
+  function updateMap(lat, long, geo) {
     map.off()
     map.remove()
     map = L.map('map').setView([long[0], lat[0]], 10);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap'
-  }).addTo(map);
-    geojsonFeature.forEach(element => {
-      L.geoJSON(element).addTo(map)
+    }).addTo(map);
+    geo.forEach(element => {
+      L.marker([element.latitude, element.longitude]).addTo(map).on('click', () => alert(element.name)).addTo(map)
     })
   }
 
