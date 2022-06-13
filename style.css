@@ -5,3 +5,7 @@ body {
 #error {
   display: none
 }
+
+#next {
+  display: block
+}

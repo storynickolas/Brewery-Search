@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+  document.getElementById('next').style.display='none' 
+
   const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado',
     'Connecticut','Delaware','District of Columbia','Florida','Georgia','Hawaii','Idaho',
     'Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts'
@@ -9,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     'Virginia','Washington','West Virginia','Wisconsin','Wyoming']
 
   let breweries = []
+  let page = 1
+  let city
+  let state
 
   states.forEach((element) => {
     const newState = document.createElement('option');
@@ -20,15 +25,14 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     document.getElementById('breweries-list').innerHTML = '';
     breweries = []
-    let city = document.getElementById('city').value.split(' ');
+    city = document.getElementById('city').value.split(' ');
     city = city.join('_');
-    let state = document.getElementById('states').value
-    getBreweries(city, state)
-
+    state = document.getElementById('states').value
+    getBreweries(city, state, page)
   });
 
-  function getBreweries(city, state) {
-    fetch(`https://api.openbrewerydb.org/breweries?by_city=${city}&by_state=${state}&per_page=20&page=1`)
+  function getBreweries(city, state, page) {
+    fetch(`https://api.openbrewerydb.org/breweries?by_city=${city}&by_state=${state}&per_page=20&page=${page}`)
       .then((res) => res.json())
       .then((data) => breweryListMaker(data))
   }
@@ -48,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function breweryListMaker(breweries) {
     breweries[0] == undefined ? document.getElementById('error').style.display='block' : document.getElementById('error').style.display='none'
-    // document.getElementById('error').style.display='block' : document.getElementById('error').style.display='none'
+    breweries.length < 20 ? document.getElementById('next').style.display='none' : document.getElementById('next').style.display='block'
     breweries.forEach((element) => {
       const newBrew = document.createElement('li');
       newBrew.setAttribute('class', 'currentList');
@@ -57,5 +61,12 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('breweries-list').append(newBrew);
       createBrews(element)
     })
+  }
+
+  document.getElementById('next').addEventListener('click', () => next())
+
+  function next() {
+    page++
+    getBreweries(city, state, page)
   }
 })
