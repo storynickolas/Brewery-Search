@@ -46,8 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function breweryListMaker(breweries) {
     breweries.forEach((element) => {
+      const newBrew = document.createElement('li');
+      newBrew.setAttribute('class', 'currentList');
+      newBrew.textContent = element.name;
+      newBrew.addEventListener('click', () => console.log(element.name));
+      document.getElementById('breweries-list').append(newBrew);
       createBrews(element)
-  })
-}
-
+    })
+  }
 })
