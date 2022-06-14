@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont',
     'Virginia','Washington','West Virginia','Wisconsin','Wyoming']
 
-  let breweries = []
+  // let breweries = []
   let page
   let city
   let state
@@ -87,10 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   //populate brewery list or show error message
   function breweryListMaker(breweries) {
-    console.log(breweries)
     let count = 1;
-    let lat = []
-    let long = []
     let geo = []
     breweries[0] == undefined ? document.getElementById('error').style.display='block' : document.getElementById('error').style.display='none'
     page < 1 || breweries.length !== 20 ? document.getElementById('next').style.display='none' : document.getElementById('next').style.display='block'
@@ -111,8 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `
       if (typeof element.longitude === 'string') {
-        lat.push(element.latitude)
-        long.push(element.longitude)
         geo.push({
           name: element.name, 
           latitude: element.latitude, 
@@ -126,9 +121,8 @@ document.addEventListener('DOMContentLoaded', () => {
       // createBrews(element)
       count++
     })
-    console.log(breweries)
     if(geo.length > 0) {
-      updateMap(long, lat, geo)
+      updateMap(geo)
     }
     else {
       map.off()
@@ -138,10 +132,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   //Move map to new location based on first brewery with coordinates
-  function updateMap(lat, long, geo) {
+  function updateMap(geo) {
     map.off()
     map.remove()
-    map = L.map('map').setView([long[0], lat[0]], 10);
+    map = L.map('map').setView([geo[0].latitude, geo[0].longitude], 10);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap'

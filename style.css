@@ -3,7 +3,9 @@ body {
 }
 
 #error {
-  display: none
+  display: none;
+  margin-right: 5%;
+  float: left;
 }
 
 #next {
