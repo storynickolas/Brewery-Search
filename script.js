@@ -15,13 +15,18 @@ document.addEventListener('DOMContentLoaded', () => {
   let page
   let city
   let state
+  let map
 
   //Establish map at geographic center of US
-  let map = L.map('map').setView([39.8283, -98.5795], 4);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© OpenStreetMap'
-  }).addTo(map);
+  function resetMap() {
+    map = L.map('map').setView([39.8283, -98.5795], 4);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+  }
+
+  resetMap()
 
   //Add list of states to selection
   states.forEach((element) => {
@@ -50,30 +55,30 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   //Fill breweries array from API data
-  class brewery{
-    constructor(name, latitude, longitude, street, zip, url, phone){
-      this.name = name
-      this.latitude = latitude,
-      this.longitude = longitude,
-      this.street = street,
-      this.zip = zip,
-      this.url = url,
-      this.phone = phone
-    }
-  }
+  // class brewery{
+  //   constructor(name, latitude, longitude, street, zip, url, phone){
+  //     this.name = name
+  //     this.latitude = latitude,
+  //     this.longitude = longitude,
+  //     this.street = street,
+  //     this.zip = zip,
+  //     this.url = url,
+  //     this.phone = phone
+  //   }
+  // }
 
-  function createBrews(place) {
-    breweries.push(
-      new brewery(
-        place.name, 
-        place.latitude, 
-        place.longitude,
-        place.street,
-        place.postal_code,
-        place.website_url,
-        place.phone
-      ))
-  }
+  // function createBrews(place) {
+  //   breweries.push(
+  //     new brewery(
+  //       place.name, 
+  //       place.latitude, 
+  //       place.longitude,
+  //       place.street,
+  //       place.postal_code,
+  //       place.website_url,
+  //       place.phone
+  //     ))
+  // }
 
   //Click on brewery name for additional info
   function moreInfo(info) {
@@ -82,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   //populate brewery list or show error message
   function breweryListMaker(breweries) {
+    console.log(breweries)
     let count = 1;
     let lat = []
     let long = []
@@ -117,12 +123,17 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('breweries-list').append(newBrew);
       document.getElementById(`m${count}`).style.display='none'
       newBrew.addEventListener('click', (e) => moreInfo(e.target.id))
-      createBrews(element)
+      // createBrews(element)
       count++
     })
     console.log(breweries)
-    if(breweries[0].longitude !== null) {
+    if(geo.length > 0) {
       updateMap(long, lat, geo)
+    }
+    else {
+      map.off()
+      map.remove()
+      resetMap()
     }
   }
 
