@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const previous = document.getElementById('previous')
   const next = document.getElementById('next')
 
+
   next.style.display='none' 
   previous.style.display='none' 
 
@@ -31,6 +32,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   resetMap()
 
+  //Add functionality to next/previous buttons if results have more than 20 breweries
+  document.getElementById('next').addEventListener('click', () => nextBtn())
+  document.getElementById('previous').addEventListener('click', () => previousBtn())
+
+  function nextBtn() {
+    page++
+    document.getElementById('brews').innerHTML=''
+    getBreweries(city, state, page)
+  }
+
+  function previousBtn() {
+    page--
+    document.getElementById('brews').innerHTML=''
+    getBreweries(city, state, page)
+  }
+
   //Add list of states to selection
   states.forEach((element) => {
     const newState = document.createElement('option');
@@ -42,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('search').addEventListener('click', (e) => {
     page=1
     e.preventDefault();
-    document.getElementById('breweries-list').innerHTML = '';
+    // document.getElementById('breweries-list').innerHTML = '';
     // breweries = []
     city = document.getElementById('city').value.split(' ');
     city = city.join('_');
@@ -52,31 +69,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   //Retrieve breweries from search
   function getBreweries(city, state, page) {
-    fetch(`https://api.openbrewerydb.org/breweries?by_city=${city}&by_state=${state}&per_page=20&page=${page}`)
+    fetch(`https://api.openbrewerydb.org/breweries?by_city=${city}&by_state=${state}&per_page=10&page=${page}`)
       .then((res) => res.json())
       .then((data) => breweryListMaker(data))
   }
 
-   //Add functionality to next/previous buttons if results have more than 20 breweries
-   document.getElementById('next').addEventListener('click', () => nextBtn())
-   document.getElementById('previous').addEventListener('click', () => previousBtn())
- 
-   function nextBtn() {
-     page++
-     document.getElementById('breweries-list').innerHTML=''
-     getBreweries(city, state, page)
-   }
- 
-   function previousBtn() {
-     page--
-     document.getElementById('breweries-list').innerHTML=''
-     getBreweries(city, state, page)
-   }
-
-  //Click on brewery name for additional info
-  function moreInfo(info) {
-    document.getElementById(`m${info}`).style.display='block'
-  }
+  // //Click on brewery name for additional info
+  // function moreInfo(info) {
+  //   document.getElementById(`m${info}`).style.display='block'
+  // }
 
   //populate brewery list or show error message
   function breweryListMaker(breweries) {
@@ -85,26 +86,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const error = document.getElementById('error').style
 
     breweries[0] ? error.display = 'none' : error.display = 'block'
-    breweries.length < 20 ? next.style.display = 'none' : next.style.display = 'block'
+    breweries.length < 10 ? next.style.display = 'none' : next.style.display = 'block'
     page > 1 ? previous.style.display='block' : previous.style.display = 'none' 
 
     breweries.forEach((element) => {
-      const newBrew = document.createElement('li')
+      const newBrew = document.createElement('tr')
       let address, website, phone
-      // element.street ? address = `${element.street}, ${element.city}` : address = ''
+
       address = element.street ? `${element.street}, ${element.city}` : ''
       website = element.website_url ? `${element.website_url}` : ''
       phone = element.phone ? `(${element.phone.slice(0,3)})-${element.phone.slice(3,6)}-${element.phone.slice(6,10)}` : ''
       
+
       newBrew.innerHTML = `
-        <p id=${count}>${element.name}</p>
-        <div class='breweries' id=m${count}>
-          <h3>${element.name}</h3>
-          <h4>${address}</h4>
-          <h4>${phone}</h4>
-          <a href=${website}>${website} </a>
-        </div>
-      `
+        <tr>
+          <td id=${count}>${element.name}</td>
+          <td>${address}</td>
+          <td>${phone}</td>
+          <td><a href=${website}>${element.name} </a><td>
+        </tr>
+    `
       if (element.longitude) {
         geo.push({
           name: element.name, 
@@ -113,10 +114,9 @@ document.addEventListener('DOMContentLoaded', () => {
         })
       }
       newBrew.setAttribute('id', count)
-      document.getElementById('breweries-list').append(newBrew);
-      document.getElementById(`m${count}`).style.display='none'
-      newBrew.addEventListener('click', (e) => moreInfo(e.target.id))
-      // createBrews(element)
+      document.getElementById('brews').append(newBrew);
+      // document.getElementById(`m${count}`).style.display='none'
+      // newBrew.addEventListener('click', (e) => moreInfo(e.target.id))
       count++
     })
     if(geo.length > 0) {

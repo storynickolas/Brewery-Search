@@ -8,14 +8,21 @@ body {
   float: left;
 }
 
+#search-bar {
+  float: left;
+  align-content: center;
+  margin-right: 5%
+}
+
 #next {
   float:left;
 }
 
 #previous {
-  margin-right: 0%;
+  margin-left: 0%;
   float:left;
 }
+
 
 #map { 
   height: 400px; 
@@ -25,7 +32,29 @@ body {
 }
 
 #breweries-list {
-  margin-right: 5%;
-  width: 30%;
-  float: left;
+  clear: left;
 }
+
+#brews {
+  word-wrap: break-word;
+  column-width: 10%;
+  float: left;
+  clear: left;
+  width: 50%;
+}
+
+#brews2 {
+  word-wrap: break-word;
+  column-width: 10%;
+  float: left;
+  clear: left;
+  width: 50%;
+}
+
+td {
+  word-wrap: break-word;
+  /* border: 1px solid black; */
+  width: 10%;
+  /* overflow: hidden; */
+}
+

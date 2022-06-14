@@ -13,11 +13,14 @@
 <body>
   <h1>Brewery Finder</h1>
   
-  <form >
+  <form id="search-bar">
     <input id='city' type="text" autocomplete="off">
     <select id="states"></select>
     <button id="search">Search</button>
   </form>
+  <button id="previous">Previous</button>
+  <button id="next">Next</button>
+
   <div id="error">
     <p>Sorry there do not appear to be any matches</p>
     <ul>
@@ -25,13 +28,17 @@
       <li>Try removing any special characters/numbers</li>
     </ul>
   </div>
-  <ul id="breweries-list">
-  </ul>
-  <div id="map"></div>
-  <div>
-    <button id="previous">Previous</button><button id="next">Next</button>
-  </div>
-  
+  <table id="brews2">
+    <tr>
+      <th>Name</th>
+      <th>Location</th>
+      <th>Phone</th>
+      <th>Website</th>
+    </tr>
+  </table>
+  <table id="brews">
+  </table>
+  <div id="map" ></div>
   <script src="script.js"></script>
 </body>
 </html>
