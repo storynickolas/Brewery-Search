@@ -2,10 +2,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const previous = document.getElementById('previous')
   const next = document.getElementById('next')
-
+  const mapNA = document.getElementById('mapNa')
 
   next.style.display='none' 
   previous.style.display='none' 
+  mapNA.style.display='none' 
 
   const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado',
     'Connecticut','Delaware','District of Columbia','Florida','Georgia','Hawaii','Idaho',
@@ -20,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let city
   let state
   let map
+  let mapOn = true
 
   //Establish map at geographic center of US
   function resetMap() {
@@ -59,8 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('search').addEventListener('click', (e) => {
     page=1
     e.preventDefault();
-    // document.getElementById('breweries-list').innerHTML = '';
-    // breweries = []
+    document.getElementById('brews').innerHTML = '';
     city = document.getElementById('city').value.split(' ');
     city = city.join('_');
     state = document.getElementById('states').value
@@ -93,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const newBrew = document.createElement('tr')
       let address, website, phone
 
-      address = element.street ? `${element.street}, ${element.city}` : ''
+      address = element.street ? `${element.street}, ${element.city}` : 'Not Available'
       website = element.website_url ? `${element.website_url}` : ''
       phone = element.phone ? `(${element.phone.slice(0,3)})-${element.phone.slice(3,6)}-${element.phone.slice(6,10)}` : ''
       
@@ -101,8 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
       newBrew.innerHTML = `
         <tr>
           <td id=${count}>${element.name}</td>
-          <td>${address}</td>
-          <td>${phone}</td>
+          <td id='col2'>${address}</td>
+          <td id='col3'>${phone}</td>
           <td><a href=${website}>${element.name} </a><td>
         </tr>
     `
@@ -120,19 +121,25 @@ document.addEventListener('DOMContentLoaded', () => {
       count++
     })
     if(geo.length > 0) {
+      mapNA.style.display='none' 
       updateMap(geo)
     }
     else {
       map.off()
       map.remove()
-      resetMap()
+      mapOn = false
+      mapNA.style.display='block' 
+      
     }
   }
 
   //Move map to new location based on first brewery with coordinates
   function updateMap(geo) {
-    map.off()
-    map.remove()
+    if(mapOn){
+      map.off()
+      map.remove()
+    }
+    
     map = L.map('map').setView([geo[0].latitude, geo[0].longitude], 10);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
