@@ -121,7 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
       count++
     })
     if(geo.length > 0) {
-      mapOn = true;
       mapNA.style.display='none' 
       updateMap(geo)
     }
@@ -149,5 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
     geo.forEach(element => {
       L.marker([element.latitude, element.longitude]).addTo(map).on('click', () => alert(element.name)).addTo(map)
     })
+    mapOn = true;
   }
 })
