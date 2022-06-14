@@ -121,6 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
       count++
     })
     if(geo.length > 0) {
+      mapOn = true;
       mapNA.style.display='none' 
       updateMap(geo)
     }
