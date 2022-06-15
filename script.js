@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
       
 
       newBrew.innerHTML = `
-        <tr>
+        <tr >
           <td id=${count}>${element.name}</td>
           <td id='col2'>${address}</td>
           <td id='col3'>${phone}</td>
@@ -114,10 +114,11 @@ document.addEventListener('DOMContentLoaded', () => {
           longitude: element.longitude
         })
       }
-      newBrew.setAttribute('id', count)
+      newBrew.setAttribute('id', element.name)
+      newBrew.setAttribute('class', 'brew123')
       document.getElementById('brews').append(newBrew);
-      // document.getElementById(`m${count}`).style.display='none'
-      // newBrew.addEventListener('click', (e) => moreInfo(e.target.id))
+
+   
       count++
     })
     if(geo.length > 0) {
@@ -125,8 +126,10 @@ document.addEventListener('DOMContentLoaded', () => {
       updateMap(geo)
     }
     else {
-      map.off()
-      map.remove()
+      if(mapOn){
+        map.off()
+        map.remove()
+      }
       mapOn = false
       mapNA.style.display='block' 
       
@@ -145,8 +148,24 @@ document.addEventListener('DOMContentLoaded', () => {
       maxZoom: 19,
       attribution: '© OpenStreetMap'
     }).addTo(map);
+
     geo.forEach(element => {
-      L.marker([element.latitude, element.longitude]).addTo(map).on('click', () => alert(element.name)).addTo(map)
+      let nMarker = L.marker([element.latitude, element.longitude]).addEventListener('click', () => {
+        let arr = [...document.getElementsByClassName('brew123')]
+        arr.forEach( element =>
+          element.style.backgroundColor = 'white'
+        )
+        document.getElementById(element.name).style.backgroundColor = 'yellow'
+      })
+      nMarker.bindPopup(element.name);
+      nMarker.on('mouseover', function (e) {
+          this.openPopup();
+      });
+      nMarker.on('mouseout', function (e) {
+          this.closePopup();
+      });
+      nMarker.addEventListener('onmouseover', () => console.log(element.name))
+      nMarker.addTo(map)
     })
     mapOn = true;
   }
