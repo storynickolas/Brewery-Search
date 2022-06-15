@@ -11,7 +11,7 @@
    crossorigin="">;</script>
 </head>
 <body>
-  <h1>Brewery Finder</h1>
+  <h1 id="title">Brewery Finder</h1>
   
   <form id="search-bar">
     <input id='city' type="text" autocomplete="off">
@@ -38,8 +38,10 @@
   </table>
   <table id="brews">
   </table>
-  <div id="map" ></div>
-  <div id="mapNa" ><h2>No Pins Available</h2></div>
+  <div id="mapCont">
+    <div id="map" ></div>
+    <div id="mapNa" ><h2>No Pins Available</h2></div>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>

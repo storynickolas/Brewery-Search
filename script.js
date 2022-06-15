@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   //Retrieve breweries from search
   function getBreweries(city, state, page) {
-    fetch(`https://api.openbrewerydb.org/breweries?by_city=${city}&by_state=${state}&per_page=10&page=${page}`)
+    fetch(`https://api.openbrewerydb.org/breweries?by_city=${city}&by_state=${state}&per_page=7&page=${page}`)
       .then((res) => res.json())
       .then((data) => breweryListMaker(data))
   }
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const error = document.getElementById('error').style
 
     breweries[0] ? error.display = 'none' : error.display = 'block'
-    breweries.length < 10 ? next.style.display = 'none' : next.style.display = 'block'
+    breweries.length < 7 ? next.style.display = 'none' : next.style.display = 'block'
     page > 1 ? previous.style.display='block' : previous.style.display = 'none' 
 
     breweries.forEach((element) => {
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <td id=${count}>${element.name}</td>
           <td id='col2'>${address}</td>
           <td id='col3'>${phone}</td>
-          <td><a href=${website}>${element.name} </a><td>
+          <td><a href=${website}>${element.name} </a></td>
         </tr>
     `
       if (element.longitude) {
@@ -155,16 +155,15 @@ document.addEventListener('DOMContentLoaded', () => {
         arr.forEach( element =>
           element.style.backgroundColor = 'white'
         )
-        document.getElementById(element.name).style.backgroundColor = 'yellow'
+        document.getElementById(element.name).style.backgroundColor = 'rgb(192,192,192)'
       })
       nMarker.bindPopup(element.name);
-      nMarker.on('mouseover', function (e) {
+      nMarker.addEventListener('mouseover', function (e) {
           this.openPopup();
       });
-      nMarker.on('mouseout', function (e) {
+      nMarker.addEventListener('mouseout', function (e) {
           this.closePopup();
       });
-      nMarker.addEventListener('onmouseover', () => console.log(element.name))
       nMarker.addTo(map)
     })
     mapOn = true;
