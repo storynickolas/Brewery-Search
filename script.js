@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }).addTo(map);
   }
 
+
   resetMap()
 
   //Add functionality to next/previous buttons if results have more than 20 breweries
@@ -58,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   //Search for breweries by city + state
-  document.getElementById('search').addEventListener('click', (e) => {
+  document.getElementById('search-bar').addEventListener('submit', (e) => {
     page=1
     e.preventDefault();
     document.getElementById('brews').innerHTML = '';
