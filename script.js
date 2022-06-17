@@ -76,11 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
       .then((data) => breweryListMaker(data))
   }
 
-  // //Click on brewery name for additional info
-  // function moreInfo(info) {
-  //   document.getElementById(`m${info}`).style.display='block'
-  // }
-
   //populate brewery list or show error message
   function breweryListMaker(breweries) {
     let count = 1;
