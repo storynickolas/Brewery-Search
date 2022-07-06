@@ -30,16 +30,13 @@ document.addEventListener('DOMContentLoaded', () => {
   let mapOn = true
 
   //Establish map at geographic center of US
-  function resetMap() {
+  (function resetMap() {
     map = L.map('map').setView([39.8283, -98.5795], 4);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap'
     }).addTo(map);
-  }
-
-
-  resetMap()
+  }())
 
   //Add functionality to next/previous buttons if results have more than 7 breweries
   document.getElementById('next').addEventListener('click', () => nextBtn())
