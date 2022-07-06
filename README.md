@@ -4,7 +4,7 @@ This app lets you search for a list of breweries by county and state (US).  A li
 
 ## How To Search
 
-1. Fill in the first form box with the name of the city you are searching for:
+Markup: 1. Fill in the first form box with the name of the city you are searching for:
 
   Include:
   *Spaces
