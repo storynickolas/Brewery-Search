@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('states').append(newState);
   });
 
-  // let breweries = []
   let page
   let city
   let state
@@ -82,10 +81,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let geo = []
     const error = document.getElementById('error').style
 
+    //Show error if fetch returns no results
     breweries[0] ? error.display = 'none' : error.display = 'block'
+
+    //Hide or show next/previous buttons
     breweries.length < 7 ? next.style.display = 'none' : next.style.display = 'block'
     page > 1 ? previous.style.display='block' : previous.style.display = 'none' 
 
+    //Populate table
     breweries.forEach((element) => {
       const newBrew = document.createElement('tr')
       let address, website, phone
