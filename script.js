@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   previous.style.display='none' 
   mapNA.style.display='none' 
 
+  //Add list of states to selection
   const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado',
     'Connecticut','Delaware','District of Columbia','Florida','Georgia','Hawaii','Idaho',
     'Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts'
@@ -15,6 +16,12 @@ document.addEventListener('DOMContentLoaded', () => {
     ,'New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon',
     'Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont',
     'Virginia','Washington','West Virginia','Wisconsin','Wyoming']
+
+  states.forEach((element) => {
+    const newState = document.createElement('option');
+    newState.textContent = element;
+    document.getElementById('states').append(newState);
+  });
 
   // let breweries = []
   let page
@@ -35,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   resetMap()
 
-  //Add functionality to next/previous buttons if results have more than 20 breweries
+  //Add functionality to next/previous buttons if results have more than 7 breweries
   document.getElementById('next').addEventListener('click', () => nextBtn())
   document.getElementById('previous').addEventListener('click', () => previousBtn())
 
@@ -50,13 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('brews').innerHTML=''
     getBreweries(city, state, page)
   }
-
-  //Add list of states to selection
-  states.forEach((element) => {
-    const newState = document.createElement('option');
-    newState.textContent = element;
-    document.getElementById('states').append(newState);
-  });
 
   //Search for breweries by city + state
   document.getElementById('search-bar').addEventListener('submit', (e) => {
