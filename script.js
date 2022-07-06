@@ -29,14 +29,19 @@ document.addEventListener('DOMContentLoaded', () => {
   let map
   let mapOn = true
 
-  //Establish map at geographic center of US
-  (function resetMap() {
-    map = L.map('map').setView([39.8283, -98.5795], 4);
+  function resetMap(lat, long, zoom) {
+    map = L.map('map').setView([lat, long], zoom);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap'
     }).addTo(map);
-  }())
+  }
+
+
+  //Establish map at geographic center of US
+  let defaultMap = [39.8283, -98.5795, 4]
+  resetMap(defaultMap[0], defaultMap[1], defaultMap[2])
+
 
   //Add functionality to next/previous buttons if results have more than 7 breweries
   document.getElementById('next').addEventListener('click', () => nextBtn())
@@ -139,11 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
       map.remove()
     }
     
-    map = L.map('map').setView([geo[0].latitude, geo[0].longitude], 10);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '© OpenStreetMap'
-    }).addTo(map);
+    resetMap(geo[0].latitude, geo[0].longitude, 10)
 
     geo.forEach(element => {
       let nMarker = L.marker([element.latitude, element.longitude]).addEventListener('click', () => {
